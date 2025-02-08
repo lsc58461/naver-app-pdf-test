@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@naverpay/react-pdf": "^0.3.4",
     "next": "15.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -19,6 +20,8 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "postcss": "^8",
+    "prettier": "^3.4.2",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4.0.0",
     "typescript": "^5"
   }
