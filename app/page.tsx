@@ -10,6 +10,10 @@ function Home() {
   const handleRenderPDFError = useCallback((e: unknown) => {
     // error logging
     console.error(e);
+
+    // 접속 기기
+    const userAgent = navigator.userAgent;
+    console.log(userAgent);
   }, []);
 
   return (
