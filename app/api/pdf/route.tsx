@@ -7,6 +7,13 @@ export async function GET() {
   try {
     const pdfBuffer = await renderToBuffer(<ResumePDFTemplate />);
 
+    // buffer로 변환 제대로 되었는지 검증
+    const isBuffer = Buffer.isBuffer(pdfBuffer);
+
+    if (!isBuffer) {
+      throw new Error("PDF 생성 실패: Buffer 변환 실패");
+    }
+
     return new NextResponse(pdfBuffer, {
       headers: {
         "Content-Type": "application/pdf",
@@ -15,7 +22,10 @@ export async function GET() {
     });
   } catch (error) {
     console.error("PDF 생성 중 오류:", error);
-    toast.error(`PDF 생성 중 오류가 발생했습니다: ${error}`);
-    return NextResponse.json({ error: "PDF 생성 실패" }, { status: 500 });
+
+    return NextResponse.json(
+      { error: { massage: `PDF 생성 실패 ${error}` } },
+      { status: 500 },
+    );
   }
 }
