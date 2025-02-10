@@ -2,7 +2,8 @@ import { renderToStream } from "@react-pdf/renderer";
 import { NextResponse } from "next/server";
 
 import { ResumePDFTemplate } from "@/components/pdf-template";
-import { toast } from "react-toastify";
+
+export const runtime = "nodejs";
 
 export async function GET() {
   try {
@@ -31,7 +32,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error("PDF 생성 중 오류:", error);
-    toast.error(`PDF 생성 중 오류가 발생했습니다: ${error}`);
     return NextResponse.json({ error: "PDF 생성 실패" }, { status: 500 });
   }
 }
