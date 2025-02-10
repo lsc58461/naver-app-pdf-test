@@ -9,10 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@naverpay/react-pdf": "^0.3.4",
+    "@react-pdf/renderer": "^4.2.1",
     "next": "15.1.6",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-pdf": "^9.2.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.0",

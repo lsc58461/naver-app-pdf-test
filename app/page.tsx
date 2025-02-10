@@ -1,26 +1,36 @@
 "use client";
 
-import { PdfViewer } from "@naverpay/react-pdf";
-import { useCallback } from "react";
+import dynamic from "next/dynamic";
 
 const PDF_URL =
   "https://kr.object.ncloudstorage.com/workvisa/id-photo/8opvktzeu6r-1738456560277.pdf";
 
-function Home() {
-  const handleRenderPDFError = useCallback((e: unknown) => {
-    // error logging
-    console.error(e);
+const PDFPage = dynamic(
+  () =>
+    import("react-pdf").then((mod) => {
+      const { Document, Page, pdfjs } = mod;
 
-    // 접속 기기
-    const userAgent = navigator.userAgent;
-    console.log(userAgent);
-  }, []);
+      if (typeof window !== "undefined") {
+        pdfjs.GlobalWorkerOptions.workerSrc =
+          "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.mjs";
+      }
 
-  return (
-    <main>
-      <PdfViewer pdfUrl={PDF_URL} onErrorPDFRender={handleRenderPDFError} />
-    </main>
-  );
-}
+      function PDFComponent() {
+        return (
+          <Document file={PDF_URL}>
+            <Page
+              pageNumber={1}
+              renderTextLayer={false}
+              renderAnnotationLayer={false}
+            />
+          </Document>
+        );
+      }
+      return PDFComponent;
+    }),
+  {
+    ssr: false,
+  },
+);
 
-export default Home;
+export default PDFPage;
