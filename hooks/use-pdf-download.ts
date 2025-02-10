@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-function usePDFDownload() {
+interface UsePDFDownloadOptions {
+  fileName?: string;
+}
+
+function usePDFDownload(options: UsePDFDownloadOptions = {}) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDownload = async () => {
@@ -13,35 +17,35 @@ function usePDFDownload() {
 
       const response = await fetch("/api/pdf", {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
       });
 
       if (!response.ok) {
-        throw new Error("PDF 생성 실패");
+        const errorData = await response.json();
+        const errorMessage =
+          errorData?.error?.message || "PDF 다운로드에 실패했습니다.";
+        console.log(errorData.error.message);
+        throw new Error(errorMessage);
       }
 
-      // PDF 다운로드
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = "pdf-test.pdf";
+      link.download = options.fileName || "pdf-test.pdf";
+
       document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
 
       toast.success("PDF 다운로드가 완료되었습니다.");
-
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
     } catch (error) {
-      if (error instanceof Error) {
-        console.error("PDF 다운로드 중 오류:", error);
-        toast.error(`PDF 다운로드 중 오류가 발생했습니다: ${error}`);
-      }
-
-      toast.error(`PDF 다운로드 중 알 수 없는 오류가 발생했습니다: ${error}`);
+      console.error(error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "알 수 없는 오류가 발생했습니다.";
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

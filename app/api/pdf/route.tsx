@@ -1,17 +1,27 @@
 import { NextResponse } from "next/server";
 import { ResumePDFTemplate } from "@/components/pdf-template";
 import { renderToBuffer } from "@react-pdf/renderer";
-import { toast } from "react-toastify";
 
 export async function GET() {
   try {
+    console.log("PDF 생성 시작...");
     const pdfBuffer = await renderToBuffer(<ResumePDFTemplate />);
+    console.log("PDF 버퍼 생성 완료:", { bufferSize: pdfBuffer.length });
 
-    // buffer로 변환 제대로 되었는지 검증
     const isBuffer = Buffer.isBuffer(pdfBuffer);
+    console.log("Buffer 검증 결과:", { isBuffer });
 
     if (!isBuffer) {
-      throw new Error("PDF 생성 실패: Buffer 변환 실패");
+      console.error("Buffer 변환 실패:", {
+        receivedType: typeof pdfBuffer,
+        value: pdfBuffer,
+      });
+      throw new Error(
+        `Buffer 변환 실패 ${JSON.stringify({
+          receivedType: typeof pdfBuffer,
+          value: pdfBuffer,
+        })}`,
+      );
     }
 
     return new NextResponse(pdfBuffer, {
@@ -20,12 +30,19 @@ export async function GET() {
         "Content-Disposition": "attachment; filename=resume.pdf",
       },
     });
-  } catch (error) {
-    console.error("PDF 생성 중 오류:", error);
+  } catch (err) {
+    if (err instanceof Error) {
+      console.error("PDF 생성 중 오류:", {
+        name: err.name,
+        message: err.message,
+        stack: err.stack,
+        cause: err.cause,
+      });
 
-    return NextResponse.json(
-      { error: { massage: `PDF 생성 실패 ${error}` } },
-      { status: 500 },
-    );
+      return NextResponse.json(
+        { error: { message: err.message } },
+        { status: 500 },
+      );
+    }
   }
 }
