@@ -1,3 +1,4 @@
+import "@/utils/pdf-worker-polyfills";
 import { renderToStream } from "@react-pdf/renderer";
 import { NextResponse } from "next/server";
 
