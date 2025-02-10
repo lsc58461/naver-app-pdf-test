@@ -27,7 +27,12 @@ export async function GET() {
     return new NextResponse(pdfBuffer, {
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": "attachment; filename=resume.pdf",
+        "Content-Disposition": 'inline; filename="resume.pdf"',
+        "Content-Length": pdfBuffer.length.toString(),
+        "Cache-Control": "no-cache",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET",
+        "Access-Control-Allow-Headers": "Content-Type",
       },
     });
   } catch (err) {
