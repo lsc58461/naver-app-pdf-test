@@ -32,6 +32,7 @@ function usePDFDownload() {
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("PDF 다운로드 중 오류:", error);
+      throw new Error(`PDF 다운로드 실패 : ${error}`);
     } finally {
       setIsLoading(false);
     }
