@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import "@/utils/pdf-worker-polyfills";
 import { useState } from "react";
 
 const PDF_URL =
@@ -12,8 +13,7 @@ const PDFPage = dynamic(
       const { Document, Page, pdfjs } = mod;
 
       if (typeof window !== "undefined") {
-        pdfjs.GlobalWorkerOptions.workerSrc =
-          "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.mjs";
+        pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`;
       }
 
       function PDFComponent() {
