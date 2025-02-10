@@ -15,7 +15,7 @@ function usePDFDownload(options: UsePDFDownloadOptions = {}) {
       toast.info("PDF 다운로드 중입니다. 잠시만 기다려주세요.");
       setIsLoading(true);
 
-      if (window.navigator.userAgent.includes("naver")) {
+      if (window.navigator.userAgent.includes("NAVER")) {
         throw new Error(
           "네이버 브라우저에서는 PDF 다운로드가 지원되지 않습니다. 크롬 브라우저를 이용해주세요.",
         );
