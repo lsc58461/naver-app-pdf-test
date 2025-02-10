@@ -15,7 +15,10 @@ export async function GET() {
     await new Promise((resolve, reject) => {
       stream.on("data", (chunk: Buffer) => chunks.push(chunk));
       stream.on("end", () => resolve(true));
-      stream.on("error", reject);
+      stream.on("error", (err) => {
+        console.error("PDF 스트림 생성 중 오류:", err);
+        reject(err);
+      });
     });
 
     const pdfBuffer = Buffer.concat(chunks);
